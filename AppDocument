@@ -1,0 +1,31 @@
+Document contains Information about the application.
+
+Application: CosmoDB
+Version: 1.08
+Features: An intermediate CLI-adapter between the PostgreSQL database and the application client.
+Managed by: Application Master Abhishek7022
+
+How it works:
+
+
+
+Working features:
+
+1. docker pull postgres
+2. docker run --name postgreSQL -e --POSTGRES_PASSWORD=postgre -d postgres
+3. docker ps
+4. docker exec -it postgreSQL psql -U postgres
+5. CREATE USER dbuser WITH PASSWORD 'postgre';
+6. CREATE DATABASE empdatabase;
+7. GRANT ALL PRIVILEGES ON DATABASE empdatabase TO dbuser;
+8. \c empdatabase
+9. CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL
+   );
+10. INSERT INTO users (username, email) VALUES ('satomi', 'satomi.ishihara@gmail.com');
+11. SELECT * FROM users;
+
+
+
