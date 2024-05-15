@@ -1,19 +1,23 @@
-FROM python:3.8-slim
+FROM ubuntu:20.04
 
-WORKDIR /app
+# Install OpenSSH server
+RUN apt-get update && \
+    apt-get install -y openssh-server && \
+    apt-get clean
 
-# Copy application files
-COPY app/ /app
-COPY requirements.txt /app
+# Set up SSH user and password (replace 'dbuser1' and 'mysecretpassword' with your desired credentials)
+RUN useradd -rm -d /home/dbuser1 -s /bin/bash -g root -G sudo -u 1000 dbuser1 && \
+    echo 'dbuser1:postgresql' | chpasswd
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Create directory for SSH keys
+RUN mkdir /home/dbuser1/.ssh
 
-# Install PostgreSQL client
-RUN apt-get update && apt-get install -y postgresql-client
+# Copy SSH configuration files
+COPY sshd_config /etc/ssh/sshd_config
+COPY authorized_keys /home/dbuser1/.ssh/authorized_keys
 
-# Expose port for Flask application
-EXPOSE 5000
+# Expose SSH port
+EXPOSE 22
 
-# Command to run Flask application
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0"]
+# Start SSH service
+CMD ["/usr/sbin/sshd", "-D"]
